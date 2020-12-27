@@ -14,7 +14,6 @@ class RecordController extends Controller
     {
         $month = Carbon::now()->format("m");
         $year = Carbon::now()->format("Y");
-        
     }
 
     public function index($month, $year)
