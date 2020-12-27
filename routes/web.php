@@ -21,7 +21,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/records/{month}', 'App\Http\Controllers\RecordController@index');
+Route::get('/records/{month}/{year}', 'App\Http\Controllers\RecordController@index');
 Route::delete('/records/{id}', 'App\Http\Controllers\RecordController@destroy')->name('records.destroy');
 Route::get('/records/create', 'App\Http\Controllers\RecordController@create')->name('records.create');
 Route::post('/records', 'App\Http\Controllers\RecordController@store')->name('records.store');

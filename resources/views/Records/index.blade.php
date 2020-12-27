@@ -12,11 +12,11 @@
 
     <!-- Top -->
     <div class="row top h-auto">
-        <div class="col-md">{{ $month }} / </div>
-        <a href="./{{ $prev_month }}"> 
+        <div class="col-md">{{ $month }} / {{ $year }}</div>
+        <a href="../{{ $prev_month }}/{{ $prev_year }}"> 
             <h4><< {{ $prev_month }}</h4>
         </a>
-        <a href="./{{ $next_month }}">
+        <a href="../{{ $next_month }}/{{ $next_year }}">
             <h4>{{ $next_month }}>></h4>
         </a>
     </div>

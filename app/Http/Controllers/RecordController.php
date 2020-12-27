@@ -5,31 +5,34 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RecordRequest;
 use App\Models\Record;
 use Carbon\Carbon;
+use DateTime;
 
 class RecordController extends Controller
 {
-    public $month;
-    // public $year;
 
     public function __construct()
     {
-        $this->month = Carbon::now()->format("m");
-        // $this->year = Carbon::now()->format("Y");
+        $month = Carbon::now()->format("m");
+        $year = Carbon::now()->format("Y");
+        
     }
 
-    public function index($month)
+    public function index($month, $year)
     {
-        $records = Record::orderBy('date', 'desc')->whereMonth('date', $month)->get();
-
-        $next_month = $this->getNext($month);
-        $prev_month = $this->getPrev($month);
-
+        $records = Record::orderBy('date', 'desc')->whereMonth('date', $month)->whereYear('date', $year)->get();
+        $next_month = $this->getNextMonth($month);
+        $next_year = $this->getNextYear($month, $year);
+        $prev_month = $this->getPrevMonth($month);
+        $prev_year = $this->getPrevYear($month,$year);
+        
         return view('records.index', [
             'records' => $records,
             'next_month' => $next_month, 
-            'prev_month' => $prev_month, 
+            'next_year' => $next_year, 
+            'prev_month' => $prev_month,
+            'prev_year' => $prev_year,  
             'month' => $month,
-            // 'year' => $year,
+            'year' => $year,
         ]);
     }
 
@@ -42,7 +45,8 @@ class RecordController extends Controller
     {
         $records = Record::create($request->all());
 
-        return redirect('/records');
+        return view('records.index');
+        //return redirect('/records');
     }
 
     public function show(Record $record)
@@ -67,7 +71,7 @@ class RecordController extends Controller
         return redirect('/records');
     }
 
-    public function getNext($month)
+    public function getNextMonth($month)
     {           
         if ($month == 12) {
             $month = 01;
@@ -77,7 +81,17 @@ class RecordController extends Controller
         return $month;
     }
 
-    public function getPrev($month)
+    public function getNextYear($month, $year)
+    {           
+        if ($month == 12) {
+            $year = $year + 1;
+        } else {
+            $year = $year;
+        }
+        return $year;
+    }
+
+    public function getPrevMonth($month)
     {           
         if ($month == 01) {
             $month = 12;
@@ -87,26 +101,14 @@ class RecordController extends Controller
         return $month;
     }
 
-    // public function getNext($month, $year)
-    // {           
-    //     if ($month == 12) {
-    //         $month = 01;
-    //         $year = $year + 1;
-    //     } else {
-    //         $month = $month + 1;
-    //         $year = $year;
-    //     }
-    //     return [$month, $year];
-    // }
+    public function getPrevYear($month, $year)
+    {           
+        if ($month == 01) {
+            $year = $year - 1;
+        } else {
+            $year = $year;
+        }
+        return $year;
+    }
 
-    // public function getPrev($month, $year)
-    // {           
-    //     if ($month == 01) {
-    //         $month = 12;
-    //         $year = $year - 1;
-    //     } else {
-    //         $month = $month - 1;
-    //     }
-    //     return [$month, $year];
-    // }
 }
