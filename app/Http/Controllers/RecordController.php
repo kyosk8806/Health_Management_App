@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RecordRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Record;
+use App\Models\User;
 use Carbon\Carbon;
-use DateTime;
 
 class RecordController extends Controller
 {
@@ -14,11 +15,13 @@ class RecordController extends Controller
     {
         $month = Carbon::now()->format("m");
         $year = Carbon::now()->format("Y");
+        $this->middleware('auth');
     }
 
     public function index($month, $year)
     {
-        $records = Record::orderBy('date', 'desc')->whereMonth('date', $month)->whereYear('date', $year)->get();
+        $user_id = Auth::user()->id;
+        $records = Record::with('user')->where('user_id', $user_id)->orderBy('date', 'desc')->whereMonth('date', $month)->whereYear('date', $year)->get();
         $next_month = $this->getNextMonth($month);
         $next_year = $this->getNextYear($month, $year);
         $prev_month = $this->getPrevMonth($month);
@@ -44,8 +47,7 @@ class RecordController extends Controller
     {
         $records = Record::create($request->all());
 
-        return view('records.index');
-        //return redirect('/records');
+        return redirect('/records');
     }
 
     public function show(Record $record)

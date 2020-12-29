@@ -9,6 +9,11 @@ class Record extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'date', 'weight', 'step', 'exercise',
+        'date', 'weight', 'step', 'exercise', 'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }

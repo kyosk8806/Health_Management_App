@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeRecordsTable extends Migration
+class AddUserIdToRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ChangeRecordsTable extends Migration
     public function up()
     {
         Schema::table('records', function (Blueprint $table) {
-            $table->date('', 'date')->change();
+            $table->integer('user_id')->unsigned();
         });
     }
 

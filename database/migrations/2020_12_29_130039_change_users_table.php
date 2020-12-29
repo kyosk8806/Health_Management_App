@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeRecordsTable extends Migration
+class ChangeUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class ChangeRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::table('records', function (Blueprint $table) {
-            $table->date('', 'date')->change();
+        Schema::table('users', function (Blueprint $table) {
+            $table->id('id', 'user_id')->change();
         });
     }
 
@@ -25,7 +25,7 @@ class ChangeRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::table('records', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }
