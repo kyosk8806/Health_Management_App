@@ -10,20 +10,9 @@
         </div>
     </div>
 
-    <!-- Top -->
-    <div class="row top h-auto">
-        <div class="col-md">{{ $month }} / {{ $year }}</div>
-        <a href="../{{ $prev_month }}/{{ $prev_year }}"> 
-            <h4><< {{ $prev_month }}</h4>
-        </a>
-        <a href="../{{ $next_month }}/{{ $next_year }}">
-            <h4>{{ $next_month }}>></h4>
-        </a>
-    </div>
-
     <div class="row-inner">
         <!-- Input Form -->
-        <div class="form">
+        <div class="form" style="margin-bottom:20px">
             <h2>Please Enter</h2>
             <form action="{{ route('records.store') }}" method="POST" autocomplete="off">
                 @csrf
@@ -65,6 +54,16 @@
                 </div>
             @endif
         </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-12" style="margin-bottom:10px">
+                <div class="header text-center">
+                    <a class="btn btn-secondary" href="../{{ $prev_month }}/{{ $prev_year }}"><<</a>
+                    <span>{{ $month }} / {{ $year }}</span>
+                    <a class="btn btn-secondary" href="../{{ $next_month }}/{{ $next_year }}">>></a>
+                </div>
+            </div>
+        </div>
     
         <!-- Tab -->
         <ul class="nav nav-tabs">
@@ -82,12 +81,13 @@
                 <table class="table">
                     <thead>
                         <tr class="table_scope">
-                            <th class="date" scope="col">Date</th>
-                            <th class="weight" scope="col">Weight</th>
-                            <th class="steps" scope="col">Steps</th>
-                            <th class="exercise" scope="col">Exercise</th>
-                            <th class="notes" scope="col">Notes</th>
-                            <th class="edit" scope="col">Del</th>
+                            <th class="date" scope="col" width="20%">Date</th>
+                            <th class="weight" scope="col" width="15%">Weight</th>
+                            <th class="steps" scope="col" width="15%">Steps</th>
+                            <th class="exercise" scope="col" width="15%">Exercise</th>
+                            <th class="notes" scope="col" width="25%">Notes</th>
+                            <th class="edit" scope="col" width="5%">Edit</th>
+                            <th class="del" scope="col" width="5%"></th>
                         </tr>
                     </thead>
 
@@ -96,14 +96,19 @@
                         <tr class="table_data">
                             <th class="date" scope="row">{{ $record->date }}</th>
                             <td class="weight">{{ $record->weight }}kg</td>
-                            <td class="steps">{{ $record->step }}steps</td>
+                            <td class="step">{{ $record->step }}steps</td>
                             <td class="exercise">{{ $record->exercise }}</td>
-                            <td class="notes">{{ $record->note }}</td>
-                            <td class="edit"> 
+                            <td class="note">{{ $record->note }}</td>
+                            <td class="edit">
+                                <form action="#" method="POST">
+                                    <input type="submit" value="Edit" class="btn btn-info">
+                                </form>
+                            </td>
+                            <td class="del">
                                 <form action="{{ route('records.destroy', $record->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <input type="submit" value="DEL" class="btn btn-danger">
+                                    <input type="submit" value="Del" class="btn btn-danger">
                                 </form>
                             </td>
                         </tr>

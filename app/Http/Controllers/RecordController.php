@@ -10,7 +10,6 @@ use Carbon\Carbon;
 
 class RecordController extends Controller
 {
-
     public function __construct()
     {
         $month = Carbon::now()->format("m");
@@ -21,7 +20,7 @@ class RecordController extends Controller
     public function index($month, $year)
     {
         $user_id = Auth::user()->id;
-        $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->get();
+        $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'desc')->get();
         $getNext = $this->getNext($month, $year);
         $getPrev = $this->getPrev($month, $year);
         
@@ -43,9 +42,17 @@ class RecordController extends Controller
 
     public function store(RecordRequest $request)
     {
-        $records = Record::create($request->all());
-
+        $record = new Record;
+        $record->user_id = $request->user()->id;
+        $record->date = $request->date;
+        $record->weight = $request->weight;
+        $record->step = $request->step;
+        $record->exercise = $request->exercise;
+        $record->note = $request->note;
+        $record->save();
+        
         return redirect('/records');
+
     }
 
     public function show(Record $record)

@@ -22,7 +22,8 @@ class RecordFactory extends Factory
     public function definition()
     {
         return [
-            'date'      => $this->faker->date(),
+            'user_id'   => $this->faker->numberBetween($min = 1,$max = 2),
+            'date'      => $this->faker->dateTimeBetween($startDate = '-1 month', $endDate = 'now')->format($format='Y-m-d'),
             'weight'    => $this->faker->randomFloat(2, $min = 60,$max = 70),
             'step'      => $this->faker->numberBetween($min = 1000,$max = 5000),
             'exercise'  => $this->faker->text($maxNbChars = 5),
