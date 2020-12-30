@@ -21,18 +21,16 @@ class RecordController extends Controller
     public function index($month, $year)
     {
         $user_id = Auth::user()->id;
-        $records = Record::with('user')->where('user_id', $user_id)->orderBy('date', 'desc')->whereMonth('date', $month)->whereYear('date', $year)->get();
-        $next_month = $this->getNextMonth($month);
-        $next_year = $this->getNextYear($month, $year);
-        $prev_month = $this->getPrevMonth($month);
-        $prev_year = $this->getPrevYear($month,$year);
+        $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->get();
+        $getNext = $this->getNext($month, $year);
+        $getPrev = $this->getPrev($month, $year);
         
         return view('records.index', [
             'records' => $records,
-            'next_month' => $next_month, 
-            'next_year' => $next_year, 
-            'prev_month' => $prev_month,
-            'prev_year' => $prev_year,  
+            'next_month' => $getNext['month'], 
+            'next_year' => $getNext['year'], 
+            'prev_month' => $getPrev['month'],
+            'prev_year' => $getPrev['year'],
             'month' => $month,
             'year' => $year,
         ]);
@@ -72,44 +70,36 @@ class RecordController extends Controller
         return redirect('/records');
     }
 
-    public function getNextMonth($month)
+    public function getNext($month, $year)
     {           
         if ($month == 12) {
             $month = 01;
-        } else {
-            $month = $month + 1;
-        }
-        return $month;
-    }
-
-    public function getNextYear($month, $year)
-    {           
-        if ($month == 12) {
             $year = $year + 1;
         } else {
+            $month = $month + 1;
             $year = $year;
         }
-        return $year;
+        $getNext = [
+            'month' => $month,
+            'year' => $year,
+        ];
+        return $getNext;
     }
 
-    public function getPrevMonth($month)
+    public function getPrev($month, $year)
     {           
         if ($month == 01) {
             $month = 12;
-        } else {
-            $month = $month - 1;
-        }
-        return $month;
-    }
-
-    public function getPrevYear($month, $year)
-    {           
-        if ($month == 01) {
             $year = $year - 1;
         } else {
+            $month = $month - 1;
             $year = $year;
         }
-        return $year;
+        $getPrev = [
+            'month' => $month,
+            'year' => $year,
+        ];
+        return $getPrev;
     }
 
 }
