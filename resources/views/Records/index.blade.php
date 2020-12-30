@@ -105,7 +105,7 @@
                                 </form>
                             </td>
                             <td class="del">
-                                <form action="{{ route('records.destroy', $record->id) }}" method="POST">
+                                <form action="{{ route('records.destroy', $record->id) }}" method="POST"　onsubmit="return delete_confirm()">
                                     @csrf
                                     @method('DELETE')
                                     <input type="submit" value="Del" class="btn btn-danger">
@@ -119,5 +119,12 @@
         </div>
     </div>
 </div>
+
+<script>
+function delete_confirm() {
+    var select = confirm("Are you sure you want to delete this item?");
+    return select;
+}
+</script>
 
 @endsection
