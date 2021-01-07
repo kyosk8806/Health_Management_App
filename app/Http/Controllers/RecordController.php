@@ -10,12 +10,16 @@ use Carbon\Carbon;
 
 class RecordController extends Controller
 {
+    private $month;
+    private $year;
+
     public function __construct()
     {
-        $month = Carbon::now()->format("m");
-        $year = Carbon::now()->format("Y");
+        $this->month = Carbon::now()->format("m");
+        $this->year = Carbon::now()->format("Y");
         $this->middleware('auth');
     }
+
 
     public function index($month, $year)
     {
@@ -50,9 +54,14 @@ class RecordController extends Controller
         $record->exercise = $request->exercise;
         $record->note = $request->note;
         $record->save();
-        
-        return redirect('/records');
 
+        $month = $this->month;
+        $year = $this->year;
+
+        return redirect(route('records.index', [
+            'month' => $month,
+            'year' => $year,
+        ]));
     }
 
     public function show(Record $record)
@@ -60,18 +69,35 @@ class RecordController extends Controller
         //
     }
 
-    public function edit(Record $record)
+    public function edit(RecordRequest $request, $id)
     {
-        //
+        $records = Record::find($request->id);
+
+        $month = $this->month;
+        $year = $this->year;
+        
+        return redirect(route('records.index', [
+            'month' => $month,
+            'year' => $year,
+        ]));
     }
 
-    public function update(RecordRequest $request, Record $record)
+    public function update(RecordRequest $request, $id)
     {
-        //
+        $records = Record::find($request->id);
+        $records->weight = $request->weight;
+        $records->step = $request->step;
+        $records->exercise = $request->exercise;
+        $records->note = $request->note;
+
+        $records->save();
+        return redirect('/records');
     }
 
     public function destroy($id)
     {
+        print_r($id);
+        exit;
         Record::find($id)->delete();
 
         return redirect('/records');
@@ -83,7 +109,7 @@ class RecordController extends Controller
             $month = 01;
             $year = $year + 1;
         } else {
-            $month = $month + 1;
+            $month = (int)$month + 1;
             $year = $year;
         }
         $getNext = [
@@ -99,7 +125,7 @@ class RecordController extends Controller
             $month = 12;
             $year = $year - 1;
         } else {
-            $month = $month - 1;
+            $month = (int)$month - 1;
             $year = $year;
         }
         $getPrev = [
