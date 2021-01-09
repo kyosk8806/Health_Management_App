@@ -24,9 +24,9 @@
         <div class="row justify-content-center">
             <div class="col-md-12" style="margin-bottom:20px">
                 <div class="header text-center">
-                    <a class="btn btn-success" href="../{{ $prev_month }}/{{ $prev_year }}"><i class="fas fa-angle-double-left"></i></a>
+                    <a class="btn btn-outline-success" href="../{{ $prev_month }}/{{ $prev_year }}"><i class="fas fa-angle-double-left"></i></a>
                     <span>{{ $month }} / {{ $year }}</span>
-                    <a class="btn btn-success" href="../{{ $next_month }}/{{ $next_year }}"><i class="fas fa-angle-double-right"></i></a>
+                    <a class="btn btn-outline-success" href="../{{ $next_month }}/{{ $next_year }}"><i class="fas fa-angle-double-right"></i></a>
                 </div>
             </div>
         </div>
@@ -58,16 +58,11 @@
                         <a href="{{ route('records.edit', $record->id) }}" class="btn btn-outline-primary edit"><i class="fas fa-edit"></i></a>
                     </td>
                     <td>
-                        <!-- <form action="{{ route('records.destroy', $record->id) }}" method="POST"　onsubmit="return delete_confirm()">
-                            @csrf
-                            @method('DELETE')
-                            <input type="submit" value="Del" class="btn btn-danger">
-                        </form> -->
                         <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
                 </tr>
-                @endforeach
+            @endforeach
             </tbody>
         </table>
         <!-- End Table -->
@@ -136,7 +131,6 @@
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
-
                     <input type="hidden" name="_method" value="DELETE"/>
                     <p>Are you sure? You want to delete data.</p>
                 </div>
@@ -149,10 +143,9 @@
     </div>
 </div>
 
-{{--End Delete Modal--}}
 
 <!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -196,7 +189,7 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->
 <!-- End Edit Modal -->
 
 
