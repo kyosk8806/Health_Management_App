@@ -96,11 +96,15 @@ class RecordController extends Controller
 
     public function destroy($id)
     {
-        print_r($id);
-        exit;
         Record::find($id)->delete();
 
-        return redirect('/records');
+        $month = $this->month;
+        $year = $this->year;
+        
+        return redirect(route('records.index', [
+            'month' => $month,
+            'year' => $year,
+        ]));
     }
 
     public function getNext($month, $year)
