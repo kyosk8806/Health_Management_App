@@ -19,7 +19,7 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
             CREATE
         </button>
-
+        <p>{{ $bmi }}</p>
         <!-- Month/Year pagination -->
         <div class="row justify-content-center">
             <div class="col-md-12" style="margin-bottom:20px">
@@ -46,7 +46,7 @@
                 </tr>
             </thead>
 
-            <tbody>            
+            <tbody>         
             @foreach ($records as $record)
                 <tr class="table_data">
                     <th>{{ $record->date }}</th>
@@ -55,10 +55,19 @@
                     <td>{{ $record->exercise }}</td>
                     <td>{{ $record->note }}</td>
                     <td>
-                        <a href="{{ route('records.edit', $record->id) }}" class="btn btn-outline-primary edit"><i class="fas fa-edit"></i></a>
+                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#editModal" 
+                            data-edit_uri="{{ route('records.update', $record->id) }}"
+                            data-date="{{ $record->date }}"
+                            data-weight="{{ $record->weight }}"
+                            data-step="{{ $record->step }}"
+                            data-exercise="{{ $record->exercise }}"
+                            data-note="{{ $record->note }}">
+                            <i class="fas fa-edit"></i>
+                        </button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt"></i>
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" data-delete_uri="{{ route('records.destroy', $record->id) }}">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
                 </tr>
@@ -117,21 +126,20 @@
 <!-- End Create Modal -->
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Data</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Delete Data</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('records.destroy', $record->id) }}" method="POST" id="deleteForm">
+            <form role="form" action="" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
-                    <input type="hidden" name="_method" value="DELETE"/>
                     <p>Are you sure? You want to delete data.</p>
                 </div>
                 <div class="modal-footer">
@@ -143,9 +151,8 @@
     </div>
 </div>
 
-
 <!-- Edit Modal -->
-<!-- <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -154,32 +161,32 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="#" method="POST" autocomplete="off" id="editForm">
+      <form id="form" action="" method="POST" autocomplete="off">
         @csrf
-        @method('PUT')
+        @method('PATCH')
         <div class="modal-body">
                 <div class="form-group">
                     <label>Date</label>
-                    <input type="date" name="date" id="datepicker" class="form-control" value="{{ old('date') }}">
+                    <input class="form-control" id="date" type="date" name="date" value="" readonly>
                 </div>
                 <div class="form-group">
                     <label>Weight</label>
-                    <input type="text" name="weight" id="weight" class="form-control" value="{{ old('weight') }}">
+                    <input class="form-control" id="weight" type="text" name="weight" value="">
                 </div>
                 <div class="form-group">
                     <label>Steps</label>
-                    <input type="text" name="step" id="step" class="form-control" value="{{ old('step') }}">
+                    <input class="form-control" id="step" type="text" name="step" value="">
                 </div>
                 <div class="form-group">
                     <label>Exercise</label>
-                        <select class="form-control" id="sel02" name="exercise" value="{{ old('exercise') }}">
+                        <select class="form-control" id="exercise" name="exercise" value="">
                             <option selected>Yes</option>
                             <option>No</option>
                         </select>
                 </div>
                 <div class="form-group">
                     <label>Notes</label>
-                    <input type="text" name="note" id="note" class="form-control">
+                    <input class="form-control" id="note" type="text" name="note" value="">
                 </div>
         </div>
         <div class="modal-footer">
@@ -189,15 +196,40 @@
       </form>
     </div>
   </div>
-</div> -->
+</div>
 <!-- End Edit Modal -->
-
-
-<!-- <script>
-function delete_confirm() {
-    var select = confirm("Are you sure you want to delete this item?");
-    return select;
-}
-</script> -->
-
 @endsection
+
+<!-- jQueryをCDNから読み込み -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js">
+</script>
+
+<script>
+    $(function() {
+        $('#deleteModal').on('shown.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('delete_uri');
+            var modal = $(this);
+            modal.find('form').attr('action',url);
+        });
+
+        $('#editModal').on('shown.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('edit_uri');
+            var date = button.data('date');
+            var weight = button.data('weight');
+            var step = button.data('step');
+            var exercise = button.data('exercise');
+            var note = button.data('note');
+            var modal = $(this);
+            modal.find('form').attr('action',url);
+            $('#date').val(date);
+            $('#weight').val(weight);
+            $('#step').val(step);
+            $('#exercise').val(exercise);
+            $('#note').val(note);
+        });
+    })
+</script>
+
+
