@@ -124,7 +124,7 @@ class RecordController extends Controller
         $data = $records->toArray();
         $date = [];
         foreach ($data as $key => $value) {
-            $value = $data[$key]['date']; 
+            $value = (date('m/d', strtotime($data[$key]['date']))); 
             $date[] = $value;
         }
 
