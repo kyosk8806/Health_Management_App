@@ -20,14 +20,27 @@ class RecordController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index($month, $year)
     {
         $user_id = Auth::user()->id;
         $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'desc')->get();
+        
         $getNext = $this->getNext($month, $year);
         $getPrev = $this->getPrev($month, $year);
-        
+        $lineChart = $this->lineChart($month, $year);
+
+        // Latest record data
+        $latest_record = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'desc')->first();
+        // BMI
+        $bmi = number_format($latest_record['weight'] / (1.72 * 1.72), 2);
+        if ($bmi > 25) {
+            $msg = 'Over Weight';
+        } elseif (($bmi >= 18.5) && ($bmi <= 25)) {
+            $msg = 'Normal Weight';
+        } else {
+            $msg = 'Under Weight';
+        }
+
         return view('records.index', [
             'records' => $records,
             'next_month' => $getNext['month'], 
@@ -36,6 +49,11 @@ class RecordController extends Controller
             'prev_year' => $getPrev['year'],
             'month' => $month,
             'year' => $year,
+            'latest_record' => $latest_record['weight'],
+            'bmi' => $bmi,
+            'msg' => $msg,
+            'date' => $lineChart['date'],
+            'weight' => $lineChart['weight'],
         ]);
     }
 
@@ -64,24 +82,6 @@ class RecordController extends Controller
         ]));
     }
 
-    public function show(Record $record)
-    {
-        //
-    }
-
-    public function edit(RecordRequest $request, $id)
-    {
-        $records = Record::find($request->id);
-
-        $month = $this->month;
-        $year = $this->year;
-        
-        return redirect(route('records.index', [
-            'month' => $month,
-            'year' => $year,
-        ]));
-    }
-
     public function update(RecordRequest $request, $id)
     {
         $records = Record::find($request->id);
@@ -91,13 +91,6 @@ class RecordController extends Controller
         $records->note = $request->note;
 
         $records->save();
-        return redirect('/records');
-    }
-
-    public function destroy($id)
-    {
-        Record::find($id)->delete();
-
         $month = $this->month;
         $year = $this->year;
         
@@ -105,6 +98,47 @@ class RecordController extends Controller
             'month' => $month,
             'year' => $year,
         ]));
+    }
+
+    public function destroy($id)
+    { 
+        Record::find($id)->delete();
+
+        $month = $this->month;
+        $year = $this->year;
+    
+        return redirect(route('records.index', [
+            'month' => $month,
+            'year' => $year,
+        ]));
+    }
+
+    public function lineChart($month, $year) 
+    {
+        $getNext = $this->getNext($month, $year);
+        $getPrev = $this->getPrev($month, $year);
+
+        $user_id = Auth::user()->id;
+        $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'asc')->get();
+        
+        $data = $records->toArray();
+        $date = [];
+        foreach ($data as $key => $value) {
+            $value = $data[$key]['date']; 
+            $date[] = $value;
+        }
+
+        $weight = [];
+        foreach ($data as $key => $value) {
+            $value = $data[$key]['weight']; 
+            $weight[] = $value;
+        }
+
+        $lineChart = [
+            'date' => $date,
+            'weight' => $weight,
+        ];
+        return $lineChart;
     }
 
     public function getNext($month, $year)

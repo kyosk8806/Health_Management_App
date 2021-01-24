@@ -19,7 +19,7 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
             CREATE
         </button>
-        <p>{{ $bmi }}</p>
+        <p>{{ $bmi }} : {{ $msg }}</p>
         <!-- Month/Year pagination -->
         <div class="row justify-content-center">
             <div class="col-md-12" style="margin-bottom:20px">
@@ -50,8 +50,8 @@
             @foreach ($records as $record)
                 <tr class="table_data">
                     <th>{{ $record->date }}</th>
-                    <td>{{ $record->weight }}kg</td>
-                    <td>{{ $record->step }}steps</td>
+                    <td>{{ $record->weight }} kg</td>
+                    <td>{{ $record->step }} steps</td>
                     <td>{{ $record->exercise }}</td>
                     <td>{{ $record->note }}</td>
                     <td>
@@ -230,6 +230,38 @@
             $('#note').val(note);
         });
     })
+</script>
+
+<!-- ライブラリ読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<!-- スマホ対応用のDIV -->
+<div class="chart-container" style="position: relative; width: 100%; height: 300px;">
+	<canvas id="myChart"></canvas>
+</div>
+
+<script>//以下がグラフデータ
+	var ctx = document.getElementById('myChart').getContext('2d');
+	var chart = new Chart(ctx, {
+		type: 'line',//グラフの種類
+		data: {
+			labels: @json($date),
+			datasets: [{
+				label: 'マイグラフ',
+				data: @json($weight),
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderWidth: 3,
+                fill: false,
+			}]
+		},
+		options: {
+			maintainAspectRatio: false
+		}
+	});
 </script>
 
 
