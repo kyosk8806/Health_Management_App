@@ -242,25 +242,52 @@
 <script>//以下がグラフデータ
 	var ctx = document.getElementById('myChart').getContext('2d');
 	var chart = new Chart(ctx, {
-		type: 'line',//グラフの種類
+		type: 'bar',//グラフの種類
 		data: {
 			labels: @json($date),
 			datasets: [{
-				label: 'マイグラフ',
+                type: 'line',
+				label: 'Weight',
 				data: @json($weight),
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 206, 86, 0.2)',
-                ],
+                borderColor: "rgb(54, 162, 235)",
                 borderWidth: 3,
                 fill: false,
+                yAxisID: "y-axis-1",
+            }, {
+                type: 'bar',
+                label: 'Step',
+				data: @json($step),
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                yAxisID: "y-axis-2",
+            }, {
+                type: 'line',
+                label: 'Target',
+				data: @json($target),
+                borderColor: "rgb(54, 162, 235)",
+                borderWidth: 3,
+                fill: false,
+                yAxisID: "y-axis-1",
 			}]
 		},
 		options: {
-			maintainAspectRatio: false
-		}
+			maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    id: "y-axis-1",
+                    type: "linear",
+                    position: "left",
+                }, {
+                    id: "y-axis-2",
+                    type: "linear",
+                    position: "right",
+                    gridLines: {
+                        drawOnChartArea: false,
+                    },
+                }],
+            }
+		},
 	});
 </script>
 
