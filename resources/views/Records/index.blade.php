@@ -234,6 +234,7 @@
 
 <!-- ライブラリ読み込み -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js'></script>
 <!-- スマホ対応用のDIV -->
 <div class="chart-container" style="position: relative; width: 100%; height: 300px;">
 	<canvas id="myChart"></canvas>
@@ -260,15 +261,7 @@
                 borderColor: "rgb(255, 99, 132)",
                 backgroundColor: "rgba(255, 99, 132, 0.2)",
                 yAxisID: "y-axis-2",
-            }, {
-                type: 'line',
-                label: 'Target',
-				data: @json($target),
-                borderColor: "rgb(54, 162, 235)",
-                borderWidth: 3,
-                fill: false,
-                yAxisID: "y-axis-1",
-			}]
+            }]
 		},
 		options: {
 			maintainAspectRatio: false,
@@ -278,6 +271,11 @@
                     id: "y-axis-1",
                     type: "linear",
                     position: "left",
+                    ticks: {
+                        max: @json($target + 5),
+                        min: @json($target - 1),
+                        stepSize: 0.5
+                    },
                 }, {
                     id: "y-axis-2",
                     type: "linear",
@@ -285,9 +283,42 @@
                     gridLines: {
                         drawOnChartArea: false,
                     },
-                }],
+                }]
+            },
+            annotation: {
+                annotations:[
+                    {
+                        type: 'line', // 線分を指定
+                        drawTime: 'afterDatasetsDraw',
+                        id: 'a-line-1', // 線のid名を指定（他の線と区別するため）
+                        mode: 'horizontal', // 水平を指定
+                        scaleID: 'y-axis-1', // 基準とする軸のid名
+                        value: @json($target), // 引きたい線の数値（始点）
+                        endValue: @json($target), // 引きたい線の数値（終点）
+                        borderColor: 'red', // 線の色
+                        borderWidth: 3, // 線の幅（太さ）
+                        borderDash: [2, 2],
+                        borderDashOffset: 1,
+                        label: { // ラベルの設定
+                            backgroundColor: 'rgba(255,255,255,0.8)',
+                            bordercolor: 'rgba(200,60,60,0.8)',
+                            borderwidth: 2,
+                            fontSize: 10,
+                            fontStyle: 'bold',
+                            fontColor: 'rgba(200,60,60,0.8)',
+                            xPadding: 10,
+                            yPadding: 10,
+                            cornerRadius: 3,
+                            position: 'left',
+                            xAdjust: 0,
+                            yAdjust: 0,
+                            enabled: true,
+                            content: 'Goal'
+                        }
+                    }
+                ]
             }
-		},
+        }
 	});
 </script>
 
