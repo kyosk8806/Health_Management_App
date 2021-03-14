@@ -11,29 +11,78 @@
             <h1>MY PAGE</h1>
         </div>
     </div>
-    <!-- End Header -->
-
-    <div class="row-inner">
-
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
-            CREATE
-        </button>
-        <p>{{ $bmi }} : {{ $msg }}</p>
-        <!-- Month/Year pagination -->
-        <div class="row justify-content-center">
-            <div class="col-md-12" style="margin-bottom:20px">
-                <div class="header text-center">
-                    <a class="btn btn-outline-success" href="../{{ $prev_month }}/{{ $prev_year }}"><i class="fas fa-angle-double-left"></i></a>
-                    <span>{{ $month }} / {{ $year }}</span>
-                    <a class="btn btn-outline-success" href="../{{ $next_month }}/{{ $next_year }}"><i class="fas fa-angle-double-right"></i></a>
+    <div class="content-wrapper" style="padding-bottom:20px;">
+        <div class="row" style="margin:auto">
+            <div class="col-lg-3 col-4 text-white">
+                <!-- small box -->
+                <div class="shadow p-1 mb-4 rounded bg-primary">
+                    <div class="inner" style="padding-left:5px;">
+                        <p>Weight</p>
+                        <h3>{{ $latest_record }} kg</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-4 text-white">
+                <!-- small box -->
+                <div class="shadow p-1 mb-4 rounded bg-success">
+                    <div class="inner" style="padding-left:5px;">
+                        <p>BMI</p>    
+                        <h3>{{ $bmi }} : <span style="font-size : small">{{ $msg }}</spam></h3>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-4">
+                <!-- small box -->
+                <div class="shadow p-1 mb-4 rounded bg-warning">
+                    <div class="inner text-black" style="padding-left:5px;">
+                        <p>Goal</p>
+                        <h3>{{ $target }} kg</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-4 text-white">
+                <!-- small box -->
+                <div class="shadow p-1 mb-4 rounded bg-info">
+                    <div class="inner" style="padding-left:5px;">
+                        <p>Goal Until</p>
+                        <h3>{{ $latest_record - $target }} kg</h3>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- End Month/Year pagination -->
-    
+    </div>
+    <!-- End Header -->
+
+    <!-- Button trigger modal -->
+    <div class="d-flex justify-content-between">
+        <div class="col-md-12 align-self-left">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+                CREATE
+            </button>
+            <button type="button" class="btn btn-primary">
+                GRAPH
+            </button>
+            <button type="button" class="btn btn-primary">
+                CSV
+            </button>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between" style="margin-bottom:20px">
+        <!-- Month/Year pagination -->
+        <div class="col-md-12 align-self-center">
+            <div class="header text-center">
+                <a class="btn btn-success" href="../{{ $prev_month }}/{{ $prev_year }}"><i class="fas fa-angle-double-left"></i></a>
+                <span>{{ $month }} / {{ $year }}</span>
+                <a class="btn btn-success" href="../{{ $next_month }}/{{ $next_year }}"><i class="fas fa-angle-double-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row-inner" style="width: 100%; height: 700px; overflow-y:scroll;">
         <!-- Table -->
-        <table class="table" id="datatable" >
+        <table class="table" id="datatable"> 
             <thead>
                 <tr class="table_scope">
                     <th scope="col" width="20%">Date</th>
@@ -55,7 +104,7 @@
                     <td>{{ $record->exercise }}</td>
                     <td>{{ $record->note }}</td>
                     <td>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#editModal" 
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" 
                             data-edit_uri="{{ route('records.update', $record->id) }}"
                             data-date="{{ $record->date }}"
                             data-weight="{{ $record->weight }}"
@@ -66,7 +115,7 @@
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" data-delete_uri="{{ route('records.destroy', $record->id) }}">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-delete_uri="{{ route('records.destroy', $record->id) }}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
@@ -236,9 +285,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js'></script>
 <!-- スマホ対応用のDIV -->
-<div class="chart-container" style="position: relative; width: 100%; height: 300px;">
+<!-- <div class="chart-container" style="position: relative; width: 100%; height: 300px;">
 	<canvas id="myChart"></canvas>
-</div>
+</div> -->
 
 <script>//以下がグラフデータ
 	var ctx = document.getElementById('myChart').getContext('2d');
