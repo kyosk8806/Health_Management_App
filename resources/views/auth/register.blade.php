@@ -26,6 +26,63 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="age" class="col-md-4 col-form-label text-md-right">{{ __('Age') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="age" type="text" class="form-control @error('age') is-invalid @enderror" name="age" value="{{ old('age') }}" required autocomplete="age" autofocus>
+
+                                @error('age')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label for="height" class="col-md-4 col-form-label text-md-right">{{ __('Height') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="height" type="text" class="form-control @error('height') is-invalid @enderror" name="height" value="{{ old('height') }}" required autocomplete="height" autofocus>
+
+                                @error('height')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="weight" class="col-md-4 col-form-label text-md-right">{{ __('Weight') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="weight" type="text" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') }}" required autocomplete="weight" autofocus>
+
+                                @error('weight')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="target_weight" class="col-md-4 col-form-label text-md-right">{{ __('Target Weight') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="target_weight" type="text" class="form-control @error('target_weight') is-invalid @enderror" name="target_weight" value="{{ old('target_weight') }}" required autocomplete="target_weight" autofocus>
+
+                                @error('target_weight')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                             <div class="col-md-6">

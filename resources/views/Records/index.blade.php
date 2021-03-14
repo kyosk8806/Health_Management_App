@@ -57,21 +57,33 @@
     <!-- End Header -->
 
     <!-- Button trigger modal -->
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between" style="margin-bottom:10px">
         <div class="col-md-12 align-self-left">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+            <button type="button" class="btn" data-toggle="modal" data-target="#createModal" style="color:white;background-color:#1a1aff">
                 CREATE
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn" style="color:white;background-color:#00b3b3">
+                TABLE
+            </button>
+            <button type="button" class="btn" data-toggle="modal" style="color:white;background-color:#1a1aff">
                 GRAPH
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn" data-toggle="modal" data-target="#profileModal" style="color:white;background-color:#00b3b3"
+                data-edit_uri="{{ route('records.profileUpdate', $user_data['id']) }}"
+                data-name="{{ $user_data['name'] }}"
+                data-age="{{ $user_data['age'] }}"
+                data-height="{{ $user_data['height'] }}"
+                data-target_weight="{{ $user_data['target_weight'] }}">
+                PROFILE
+            </button>
+            <button type="button" class="btn" style="color:white;background-color:#1a1aff">
                 CSV
             </button>
         </div>
     </div>
+
+    <!-- Month/Year pagination -->
     <div class="d-flex justify-content-between" style="margin-bottom:20px">
-        <!-- Month/Year pagination -->
         <div class="col-md-12 align-self-center">
             <div class="header text-center">
                 <a class="btn btn-success" href="../{{ $prev_month }}/{{ $prev_year }}"><i class="fas fa-angle-double-left"></i></a>
@@ -80,7 +92,11 @@
             </div>
         </div>
     </div>
+
     <div class="row-inner" style="width: 100%; height: 700px; overflow-y:scroll;">
+        <!-- <div class="chart-container" style="position: relative; width: 100%; height: 300px;">
+            <canvas id="myChart"></canvas>
+        </div> -->
         <!-- Table -->
         <table class="table" id="datatable"> 
             <thead>
@@ -199,6 +215,7 @@
         </div>
     </div>
 </div>
+<!-- End Delete Modal -->
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -214,29 +231,29 @@
         @csrf
         @method('PATCH')
         <div class="modal-body">
-                <div class="form-group">
-                    <label>Date</label>
-                    <input class="form-control" id="date" type="date" name="date" value="" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Weight</label>
-                    <input class="form-control" id="weight" type="text" name="weight" value="">
-                </div>
-                <div class="form-group">
-                    <label>Steps</label>
-                    <input class="form-control" id="step" type="text" name="step" value="">
-                </div>
-                <div class="form-group">
-                    <label>Exercise</label>
-                        <select class="form-control" id="exercise" name="exercise" value="">
-                            <option selected>Yes</option>
-                            <option>No</option>
-                        </select>
-                </div>
-                <div class="form-group">
-                    <label>Notes</label>
-                    <input class="form-control" id="note" type="text" name="note" value="">
-                </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input class="form-control" id="date" type="date" name="date" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label>Weight</label>
+                <input class="form-control" id="weight" type="text" name="weight" value="">
+            </div>
+            <div class="form-group">
+                <label>Steps</label>
+                <input class="form-control" id="step" type="text" name="step" value="">
+            </div>
+            <div class="form-group">
+                <label>Exercise</label>
+                <select class="form-control" id="exercise" name="exercise" value="">
+                    <option selected>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <input class="form-control" id="note" type="text" name="note" value="">
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -247,14 +264,62 @@
   </div>
 </div>
 <!-- End Edit Modal -->
+
+<!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileModalLabel">Edit Your Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="form" action="" method="POST" autocomplete="off">
+        @csrf
+        @method('PATCH')
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Name</label>
+                <input class="form-control" id="name" type="text" name="name" value="">
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input class="form-control" id="age" type="text" name="age" value="">
+            </div>
+            <div class="form-group">
+                <label>Height (m)</label>
+                <input class="form-control" id="height" type="text" name="height" value="">
+            </div>
+            <div class="form-group">
+                <label>Target Weight</label>
+                <input class="form-control" id="target_weight" type="text" name="target_weight" value="">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- End Profile Modal -->
+
 @endsection
 
 <!-- jQueryをCDNから読み込み -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js">
-</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js'></script>
+<!-- スマホ対応用のDIV -->
+<!-- <div class="chart-container" style="position: relative; width: 100%; height: 300px;">
+	<canvas id="myChart"></canvas>
+</div> -->
 
 <script>
     $(function() {
+        // Delete Modal
         $('#deleteModal').on('shown.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var url = button.data('delete_uri');
@@ -262,6 +327,7 @@
             modal.find('form').attr('action',url);
         });
 
+        // Edit Modal
         $('#editModal').on('shown.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var url = button.data('edit_uri');
@@ -278,21 +344,28 @@
             $('#exercise').val(exercise);
             $('#note').val(note);
         });
+
+        // Profile Modal
+        $('#profileModal').on('shown.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('edit_uri');
+            var name = button.data('name');
+            var age = button.data('age');
+            var height = button.data('height');
+            var target_weight = button.data('target_weight');
+            var modal = $(this);
+            modal.find('form').attr('action',url);
+            $('#name').val(name);
+            $('#age').val(age);
+            $('#height').val(height);
+            $('#target_weight').val(target_weight);
+        });
     })
-</script>
 
-<!-- ライブラリ読み込み -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js'></script>
-<!-- スマホ対応用のDIV -->
-<!-- <div class="chart-container" style="position: relative; width: 100%; height: 300px;">
-	<canvas id="myChart"></canvas>
-</div> -->
-
-<script>//以下がグラフデータ
+    // Graph data
 	var ctx = document.getElementById('myChart').getContext('2d');
 	var chart = new Chart(ctx, {
-		type: 'bar',//グラフの種類
+		type: 'bar',// graph type
 		data: {
 			labels: @json($date),
 			datasets: [{

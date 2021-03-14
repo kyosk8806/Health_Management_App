@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RecordRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\Record;
 use App\Models\User;
+
+use App\Http\Controllers\LineChart;
+use App\Http\Controllers\MonthYear;
+use App\Http\Controllers\Bmi;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class RecordController extends Controller
 {
@@ -24,22 +31,14 @@ class RecordController extends Controller
     {
         $user_id = Auth::user()->id;
         $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'desc')->get();
-        
-        $getNext = $this->getNext($month, $year);
-        $getPrev = $this->getPrev($month, $year);
-        $lineChart = $this->lineChart($month, $year);
 
-        // Latest record data
-        $latest_record = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'desc')->first();
-        // BMI
-        $bmi = number_format($latest_record['weight'] / (1.72 * 1.72), 2);
-        if ($bmi > 25) {
-            $msg = 'Over Weight';
-        } elseif (($bmi >= 18.5) && ($bmi <= 25)) {
-            $msg = 'Normal Weight';
-        } else {
-            $msg = 'Under Weight';
-        }
+        $getNext = MonthYear::getNext($month, $year);
+        $getPrev = MonthYear::getPrev($month, $year);
+        $lineChart = LineChart::lineChart($month, $year);
+        $bmi = Bmi::bmi($user_id, $month, $year);
+
+        $user_data = User::where('id', $user_id)->get()->toArray();
+        $target = $user_data[0]['target_weight'];
 
         return view('records.index', [
             'records' => $records,
@@ -49,11 +48,14 @@ class RecordController extends Controller
             'prev_year' => $getPrev['year'],
             'month' => $month,
             'year' => $year,
-            'latest_record' => $latest_record['weight'],
-            'bmi' => $bmi,
-            'msg' => $msg,
+            'latest_record' => $bmi['latest_record']['weight'],
+            'bmi' => $bmi['bmi'],
+            'msg' => $bmi['msg'],
             'date' => $lineChart['date'],
             'weight' => $lineChart['weight'],
+            'step' => $lineChart['step'],
+            'target' => $target,
+            'user_data' => $user_data[0],
         ]);
     }
 
@@ -72,7 +74,7 @@ class RecordController extends Controller
         $record->exercise = $request->exercise;
         $record->note = $request->note;
         $record->save();
-
+        // print_r(schema::getColumnListing('records'));
         $month = $this->month;
         $year = $this->year;
 
@@ -85,6 +87,8 @@ class RecordController extends Controller
     public function update(RecordRequest $request, $id)
     {
         $records = Record::find($request->id);
+        print_r($records);
+        exit;
         $records->weight = $request->weight;
         $records->step = $request->step;
         $records->exercise = $request->exercise;
@@ -113,64 +117,25 @@ class RecordController extends Controller
         ]));
     }
 
-    public function lineChart($month, $year) 
+    public function profileUpdate(Request $request, $id)
     {
-        $getNext = $this->getNext($month, $year);
-        $getPrev = $this->getPrev($month, $year);
+        $params = [
+            'id' => $request->id,
+            'name' => $request->name,
+            'age' => $request->age,
+            'height' => $request->height,
+            'target_weight' => $request->target_weight,
+        ];
 
-        $user_id = Auth::user()->id;
-        $records = Record::with('user')->where('user_id', $user_id)->whereMonth('date', $month)->whereYear('date', $year)->orderBy('date', 'asc')->get();
+        DB::update('update users set name =:name, age =:age, height =:height, target_weight =:target_weight where id =:id', $params);
         
-        $data = $records->toArray();
-        $date = [];
-        foreach ($data as $key => $value) {
-            $value = (date('m/d', strtotime($data[$key]['date']))); 
-            $date[] = $value;
-        }
-
-        $weight = [];
-        foreach ($data as $key => $value) {
-            $value = $data[$key]['weight']; 
-            $weight[] = $value;
-        }
-
-        $lineChart = [
-            'date' => $date,
-            'weight' => $weight,
-        ];
-        return $lineChart;
-    }
-
-    public function getNext($month, $year)
-    {           
-        if ($month == 12) {
-            $month = 01;
-            $year = $year + 1;
-        } else {
-            $month = (int)$month + 1;
-            $year = $year;
-        }
-        $getNext = [
+        $month = $this->month;
+        $year = $this->year;
+        
+        return redirect(route('records.index', [
             'month' => $month,
             'year' => $year,
-        ];
-        return $getNext;
-    }
-
-    public function getPrev($month, $year)
-    {           
-        if ($month == 01) {
-            $month = 12;
-            $year = $year - 1;
-        } else {
-            $month = (int)$month - 1;
-            $year = $year;
-        }
-        $getPrev = [
-            'month' => $month,
-            'year' => $year,
-        ];
-        return $getPrev;
+        ]));
     }
 
 }
