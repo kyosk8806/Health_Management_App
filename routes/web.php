@@ -29,3 +29,5 @@ Route::post('/records', 'App\Http\Controllers\RecordController@store')->name('re
 Route::patch('/records/edit/{id}', 'App\Http\Controllers\RecordController@update')->name('records.update');
 
 Route::patch('/records/profile/edit/{id}', 'App\Http\Controllers\RecordController@profileUpdate')->name('records.profileUpdate');
+
+Route::get('/graph/{month}/{year}', 'App\Http\Controllers\GraphController@index')->name('graph.index');

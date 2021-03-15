@@ -65,9 +65,9 @@
             <button type="button" class="btn" style="color:white;background-color:#00b3b3">
                 TABLE
             </button>
-            <a class="btn" href="/graph/{{ $month }}/{{ $year }}" role="button" style="color:white;background-color:#1a1aff">
+            <button type="button" class="btn" data-toggle="modal" style="color:white;background-color:#1a1aff">
                 GRAPH
-            </a>
+            </button>
             <button type="button" class="btn" data-toggle="modal" data-target="#profileModal" style="color:white;background-color:#00b3b3"
                 data-edit_uri="{{ route('records.profileUpdate', $user_data['id']) }}"
                 data-name="{{ $user_data['name'] }}"
@@ -94,49 +94,95 @@
     </div>
 
     <div class="row-inner" style="width: 100%; height: 700px; overflow-y:scroll;">
-        <!-- Table -->
-        <table class="table" id="datatable"> 
-            <thead>
-                <tr class="table_scope">
-                    <th scope="col" width="20%">Date</th>
-                    <th scope="col" width="15%">Weight</th>
-                    <th scope="col" width="15%">Steps</th>
-                    <th scope="col" width="15%">Exercise</th>
-                    <th scope="col" width="25%">Notes</th>
-                    <th scope="col" width="5%">Action</th>
-                    <th scope="col" width="5%"></th>
-                </tr>
-            </thead>
+        <div class="chart-container" style="position: relative; width: 100%; height: 500px;">
+            <canvas id="myChart"></canvas>
 
-            <tbody>         
-            @foreach ($records as $record)
-                <tr class="table_data">
-                    <th>{{ $record->date }}</th>
-                    <td>{{ $record->weight }} kg</td>
-                    <td>{{ $record->step }} steps</td>
-                    <td>{{ $record->exercise }}</td>
-                    <td>{{ $record->note }}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" 
-                            data-edit_uri="{{ route('records.update', $record->id) }}"
-                            data-date="{{ $record->date }}"
-                            data-weight="{{ $record->weight }}"
-                            data-step="{{ $record->step }}"
-                            data-exercise="{{ $record->exercise }}"
-                            data-note="{{ $record->note }}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-delete_uri="{{ route('records.destroy', $record->id) }}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-        <!-- End Table -->
+            <!-- Graph-->
+            <script>
+                window.onload = function() {
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        type: 'bar',// graph type
+                        data: {
+                            labels: @json($date),
+                            datasets: [{
+                                type: 'line',
+                                label: 'Weight',
+                                data: @json($weight),
+                                borderColor: "rgb(54, 162, 235)",
+                                borderWidth: 3,
+                                fill: false,
+                                yAxisID: "y-axis-1",
+                            }, {
+                                type: 'bar',
+                                label: 'Step',
+                                data: @json($step),
+                                borderColor: "rgb(255, 99, 132)",
+                                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                                yAxisID: "y-axis-2",
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            scales: {
+                                yAxes: [{
+                                    id: "y-axis-1",
+                                    type: "linear",
+                                    position: "left",
+                                    ticks: {
+                                        max: @json($target + 5),
+                                        min: @json($target - 1),
+                                        stepSize: 0.5
+                                    },
+                                }, {
+                                    id: "y-axis-2",
+                                    type: "linear",
+                                    position: "right",
+                                    gridLines: {
+                                        drawOnChartArea: false,
+                                    },
+                                }]
+                            },
+                            annotation: {
+                                annotations:[
+                                    {
+                                        type: 'line', // 線分を指定
+                                        drawTime: 'afterDatasetsDraw',
+                                        id: 'a-line-1', // 線のid名を指定（他の線と区別するため）
+                                        mode: 'horizontal', // 水平を指定
+                                        scaleID: 'y-axis-1', // 基準とする軸のid名
+                                        value: @json($target), // 引きたい線の数値（始点）
+                                        endValue: @json($target), // 引きたい線の数値（終点）
+                                        borderColor: 'red', // 線の色
+                                        borderWidth: 3, // 線の幅（太さ）
+                                        borderDash: [2, 2],
+                                        borderDashOffset: 1,
+                                        label: { // ラベルの設定
+                                            backgroundColor: 'rgba(255,255,255,0.8)',
+                                            bordercolor: 'rgba(200,60,60,0.8)',
+                                            borderwidth: 2,
+                                            fontSize: 10,
+                                            fontStyle: 'bold',
+                                            fontColor: 'rgba(200,60,60,0.8)',
+                                            xPadding: 10,
+                                            yPadding: 10,
+                                            cornerRadius: 3,
+                                            position: 'left',
+                                            xAdjust: 0,
+                                            yAdjust: 0,
+                                            enabled: true,
+                                            content: 'Goal'
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    });
+                }
+            </script>
+        </div>
+        <!-- End Graph -->
     </div>
 </div>
 
@@ -289,7 +335,7 @@
                 <input class="form-control" id="height" type="text" name="height" value="">
             </div>
             <div class="form-group">
-                <label>Target Weight</label>
+                <label>Target Weight (kg)</label>
                 <input class="form-control" id="target_weight" type="text" name="target_weight" value="">
             </div>
         </div>
@@ -357,7 +403,7 @@
             $('#height').val(height);
             $('#target_weight').val(target_weight);
         });
-    })
+    });
 
     // Graph data
 	var ctx = document.getElementById('myChart').getContext('2d');
