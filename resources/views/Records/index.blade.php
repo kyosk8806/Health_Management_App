@@ -62,9 +62,12 @@
             <button type="button" class="btn" data-toggle="modal" data-target="#createModal" style="color:white;background-color:#1a1aff">
                 CREATE
             </button>
-            <button type="button" class="btn" style="color:white;background-color:#00b3b3">
+            <a class="btn" href="../{{ $month }}/{{ $year }}" role="button" style="color:white;background-color:#00b3b3">
                 TABLE
-            </button>
+            </a>
+            <!-- <button type="button" class="btn" style="color:white;background-color:#00b3b3">
+                TABLE
+            </button> -->
             <a class="btn" href="/graph/{{ $month }}/{{ $year }}" role="button" style="color:white;background-color:#1a1aff">
                 GRAPH
             </a>
