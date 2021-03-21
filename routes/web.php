@@ -31,3 +31,4 @@ Route::patch('/records/edit/{id}', 'App\Http\Controllers\RecordController@update
 Route::patch('/records/profile/edit/{id}', 'App\Http\Controllers\RecordController@profileUpdate')->name('records.profileUpdate');
 
 Route::get('/graph/{month}/{year}', 'App\Http\Controllers\GraphController@index')->name('graph.index');
+Route::get('/csv/{month}/{year}', 'App\Http\Controllers\Csv@download')->name('csv.index');

@@ -76,9 +76,9 @@
                 data-target_weight="{{ $user_data['target_weight'] }}">
                 PROFILE
             </button>
-            <button type="button" class="btn" style="color:white;background-color:#1a1aff">
+            <a class="btn" href="/csv/{{ $month }}/{{ $year }}" role="button" style="color:white;background-color:#1a1aff">
                 CSV
-            </button>
+            </a>
         </div>
     </div>
 

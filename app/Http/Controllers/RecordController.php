@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Http\Controllers\LineChart;
 use App\Http\Controllers\MonthYear;
 use App\Http\Controllers\Bmi;
+use App\Http\Controllers\Csv;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
@@ -87,8 +88,6 @@ class RecordController extends Controller
     public function update(RecordRequest $request, $id)
     {
         $records = Record::find($request->id);
-        print_r($records);
-        exit;
         $records->weight = $request->weight;
         $records->step = $request->step;
         $records->exercise = $request->exercise;

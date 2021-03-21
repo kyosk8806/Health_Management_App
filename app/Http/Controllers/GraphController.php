@@ -19,6 +19,7 @@ class GraphController extends Controller
     {
         $this->month = Carbon::now()->format("m");
         $this->year = Carbon::now()->format("Y");
+        $this->middleware('auth');
     }
 
     public function index($month, $year) 
