@@ -15,8 +15,11 @@ class HomeController extends Controller
      *
      * @return void
      */
+
     public function __construct()
     {
+        $this->month = Carbon::now()->format("m");
+        $this->year = Carbon::now()->format("Y");
         $this->middleware('auth');
     }
 
@@ -55,8 +58,8 @@ class HomeController extends Controller
             'weight' => $lineChart['weight'],
             'step' => $lineChart['step'],
             'target' => $target,
+            'user_data' => $user_data[0],
         ]);
-        
-        return view('home');
+
     }
 }
