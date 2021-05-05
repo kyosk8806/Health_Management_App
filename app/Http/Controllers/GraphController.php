@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\MonthYear;
 use App\Models\User;
@@ -12,9 +11,6 @@ use Carbon\Carbon;
 
 class GraphController extends Controller
 {
-    private $month;
-    private $year;
-
     public function __construct()
     {
         $this->month = Carbon::now()->format("m");

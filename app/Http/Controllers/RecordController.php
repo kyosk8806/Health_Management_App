@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RecordRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Record;
 use App\Models\User;
-
 use App\Http\Controllers\LineChart;
 use App\Http\Controllers\MonthYear;
 use App\Http\Controllers\Bmi;
-use App\Http\Controllers\Csv;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 class RecordController extends Controller
 {
@@ -75,7 +72,6 @@ class RecordController extends Controller
         $record->exercise = $request->exercise;
         $record->note = $request->note;
         $record->save();
-        // print_r(schema::getColumnListing('records'));
         $month = $this->month;
         $year = $this->year;
 

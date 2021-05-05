@@ -30,7 +30,7 @@ class Csv extends Controller
         $getColumnLists = schema::getColumnListing('records');
         // Array to String
         $columnLists = implode(",", array_diff($getColumnLists, $deleteColumns));
-        $sql = "select {$columnLists} from records where year(`date`) = :year and month(`date`) = :month and user_id = :id";
+        $sql = "select {$columnLists} from records where year(`date`) = :year and month(`date`) = :month and user_id = :id order by date ASC";
 
         $user_data = DB::select($sql, $params);
         $records = json_decode(json_encode($user_data), true);
@@ -38,7 +38,7 @@ class Csv extends Controller
         // File type（csv）
         header('Content-Type: application/octet-stream');
         // File name
-        header("Content-Disposition: attachment; filename={$month}{$year}.csv");
+        header("Content-Disposition: attachment; filename={$month}_{$year}.csv");
         header('Content-Transfer-Encoding: binary');
      
         $csv = "";

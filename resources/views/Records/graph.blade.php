@@ -95,9 +95,8 @@
 
     <div class="row-inner" style="width: 100%; height: 700px; overflow-y:scroll;">
         <div class="chart-container" style="position: relative; width: 100%; height: 500px;">
-            <canvas id="myChart"></canvas>
-
             <!-- Graph-->
+            <canvas id="myChart"></canvas>
             <script>
                 window.onload = function() {
                     var ctx = document.getElementById('myChart').getContext('2d');
@@ -134,14 +133,14 @@
                                         max: @json($target + 5),
                                         min: @json($target - 1),
                                         stepSize: 0.5
-                                    },
+                                    }
                                 }, {
                                     id: "y-axis-2",
                                     type: "linear",
                                     position: "right",
                                     gridLines: {
                                         drawOnChartArea: false,
-                                    },
+                                    }
                                 }]
                             },
                             annotation: {
@@ -178,8 +177,8 @@
                                 ]
                             }
                         }
-                    });
-                }
+                    })
+                };
             </script>
         </div>
         <!-- End Graph -->
@@ -348,143 +347,12 @@
   </div>
 </div>
 <!-- End Profile Modal -->
-
 @endsection
 
 <!-- jQueryをCDNから読み込み -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js'></script>
-<!-- スマホ対応用のDIV -->
-<!-- <div class="chart-container" style="position: relative; width: 100%; height: 300px;">
-	<canvas id="myChart"></canvas>
-</div> -->
-
-<script>
-    $(function() {
-        // Delete Modal
-        $('#deleteModal').on('shown.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var url = button.data('delete_uri');
-            var modal = $(this);
-            modal.find('form').attr('action',url);
-        });
-
-        // Edit Modal
-        $('#editModal').on('shown.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var url = button.data('edit_uri');
-            var date = button.data('date');
-            var weight = button.data('weight');
-            var step = button.data('step');
-            var exercise = button.data('exercise');
-            var note = button.data('note');
-            var modal = $(this);
-            modal.find('form').attr('action',url);
-            $('#date').val(date);
-            $('#weight').val(weight);
-            $('#step').val(step);
-            $('#exercise').val(exercise);
-            $('#note').val(note);
-        });
-
-        // Profile Modal
-        $('#profileModal').on('shown.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var url = button.data('edit_uri');
-            var name = button.data('name');
-            var age = button.data('age');
-            var height = button.data('height');
-            var target_weight = button.data('target_weight');
-            var modal = $(this);
-            modal.find('form').attr('action',url);
-            $('#name').val(name);
-            $('#age').val(age);
-            $('#height').val(height);
-            $('#target_weight').val(target_weight);
-        });
-    });
-
-    // Graph data
-	var ctx = document.getElementById('myChart').getContext('2d');
-	var chart = new Chart(ctx, {
-		type: 'bar',// graph type
-		data: {
-			labels: @json($date),
-			datasets: [{
-                type: 'line',
-				label: 'Weight',
-				data: @json($weight),
-                borderColor: "rgb(54, 162, 235)",
-                borderWidth: 3,
-                fill: false,
-                yAxisID: "y-axis-1",
-            }, {
-                type: 'bar',
-                label: 'Step',
-				data: @json($step),
-                borderColor: "rgb(255, 99, 132)",
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
-                yAxisID: "y-axis-2",
-            }]
-		},
-		options: {
-			maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    id: "y-axis-1",
-                    type: "linear",
-                    position: "left",
-                    ticks: {
-                        max: @json($target + 5),
-                        min: @json($target - 1),
-                        stepSize: 0.5
-                    },
-                }, {
-                    id: "y-axis-2",
-                    type: "linear",
-                    position: "right",
-                    gridLines: {
-                        drawOnChartArea: false,
-                    },
-                }]
-            },
-            annotation: {
-                annotations:[
-                    {
-                        type: 'line', // 線分を指定
-                        drawTime: 'afterDatasetsDraw',
-                        id: 'a-line-1', // 線のid名を指定（他の線と区別するため）
-                        mode: 'horizontal', // 水平を指定
-                        scaleID: 'y-axis-1', // 基準とする軸のid名
-                        value: @json($target), // 引きたい線の数値（始点）
-                        endValue: @json($target), // 引きたい線の数値（終点）
-                        borderColor: 'red', // 線の色
-                        borderWidth: 3, // 線の幅（太さ）
-                        borderDash: [2, 2],
-                        borderDashOffset: 1,
-                        label: { // ラベルの設定
-                            backgroundColor: 'rgba(255,255,255,0.8)',
-                            bordercolor: 'rgba(200,60,60,0.8)',
-                            borderwidth: 2,
-                            fontSize: 10,
-                            fontStyle: 'bold',
-                            fontColor: 'rgba(200,60,60,0.8)',
-                            xPadding: 10,
-                            yPadding: 10,
-                            cornerRadius: 3,
-                            position: 'left',
-                            xAdjust: 0,
-                            yAdjust: 0,
-                            enabled: true,
-                            content: 'Goal'
-                        }
-                    }
-                ]
-            }
-        }
-	});
-</script>
+<script src="{{ asset('js/modal.js') }}"></script>
 
 
