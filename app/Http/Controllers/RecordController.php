@@ -35,8 +35,8 @@ class RecordController extends Controller
         $lineChart = LineChart::lineChart($month, $year);
         $bmi = Bmi::bmi($user_id, $month, $year);
 
-        $user_data = User::where('id', $user_id)->get()->toArray();
-        $target = $user_data[0]['target_weight'];
+        $user_data = User::where('id', $user_id)->first()->toArray();
+        $target = $user_data['target_weight'];
 
         return view('records.index', [
             'records' => $records,
@@ -53,7 +53,7 @@ class RecordController extends Controller
             'weight' => $lineChart['weight'],
             'step' => $lineChart['step'],
             'target' => $target,
-            'user_data' => $user_data[0],
+            'user_data' => $user_data,
         ]);
     }
 
